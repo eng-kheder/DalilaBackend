@@ -19,10 +19,12 @@ return new class extends Migration
             $table->char('email', 50)->nullable(false)->unique();
             $table->char('location', 50)->nullable(false);
             $table->char('commercial_record', 50)->nullable(false)->unique();
-            $table->unsignedBigInteger('type_id')->nullable(false);
+            $table->unsignedBigInteger('type_id')->nullable()->default(0);
             $table->double('price')->nullable(false);
             $table->timestamp('email_verified_at')->nullable();
-            $table->char('password', 50)->nullable(false);
+            $table->char('password', 255)->nullable(false)->default("12345678");
+            $table->char('password_confirmation', 255)->nullable(false)->default("12345678");
+
             $table->timestamps();
         });
     }

@@ -19,4 +19,29 @@ class TourismAgency extends Model
         'commercial_record',
         'type_id',
         'price' ,
-    ];}
+        'password',
+        'password_confirmation' ,
+        'updated_at',
+        'created_at',
+    ];
+    protected $hidden = [
+        'remember_token',
+        'email_verified_at',
+
+    ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
+
+    public function tourismAgencyType()
+    {
+        return $this->belongsTo(UsersType::class, 'type_id')->select('id', 'type_title');
+    }
+    public function agencyLanguages()
+    {
+        return $this->hasMany(AgencyLanguage::class, 'agency_id')->select( 'agency_id','language_id');
+    }
+
+}

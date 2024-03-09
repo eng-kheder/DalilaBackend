@@ -16,12 +16,10 @@ class UserRequest extends FormRequest
     public function rules()
     {
              return [
-
-                 'name'=> 'required|max:50',
+                 'user_name'=> 'required|max:50',
                  'city'=> 'required|max:50 ',
                  'gender'=> 'required ',
                  'age'=> 'required ',
-                 'type'=> 'required ',
                  'password' => 'required|max:50',
                  'password_confirmation' => 'required|max:50',
                  'phone_number' => [

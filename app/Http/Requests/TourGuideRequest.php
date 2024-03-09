@@ -16,12 +16,11 @@ class TourGuideRequest extends FormRequest
     public function rules()
     {
              return [
-                 'name'=> 'required|max:50',
+                 'guide_name'=> 'required|max:50',
                  'city'=> 'required|max:50 ',
                  'gender'=> 'required ',
                  'age'=> 'required ',
                  'price'=> 'required ',
-                 'type'=> 'required ',
                  'password' => 'required|max:255',
                  'password_confirmation' => 'required|max:255',
                  'phone_number' => [

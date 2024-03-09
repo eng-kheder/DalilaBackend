@@ -19,7 +19,7 @@ return new class extends Migration
             $table->char('email', 50)->nullable(false)->unique();
             $table->boolean('gender')->default(false)->nullable(false);
             $table->integer('age')->nullable(false);
-            $table->unsignedBigInteger('type_id')->nullable(false)->default(0);
+            $table->unsignedBigInteger('type_id')->nullable()->default(0);
             $table->double('price')->nullable(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->char('password', 255)->nullable(false)->default("12345678");

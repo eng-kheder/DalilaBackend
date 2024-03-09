@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TourGuideRequest;
 use App\Models\TourGuide;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class TourGuideController extends Controller
@@ -47,7 +45,7 @@ class TourGuideController extends Controller
             }
 
             $tourGuide = TourGuide::create([
-                'guide_name' => $request->name,
+                'guide_name' => $request->guide_name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'password_confirmation' => Hash::make($request->password_confirmation),
@@ -56,9 +54,9 @@ class TourGuideController extends Controller
                 'gender' => $request->gender,
                 'age' => $request->age,
                 'price' => $request->price,
-//            'type_id'=> $request->type,
+                'type_id'=>2,
             ]);
-            $tourGuide->tourGuideType()->associate($request->type);
+            $tourGuide->tourGuideType()->associate($tourGuide->type_id);
         $tourGuide->save();
 
         // Loop through the languages and associate them with the TourGuide

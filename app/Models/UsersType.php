@@ -25,5 +25,9 @@ class UsersType extends Model
     {
         return $this->hasMany(TourGuide::class, 'type_id')->select( 'guide_name', 'city', 'phone_number', 'email', 'gender', 'age', 'price');
     }
+    public function tourismAgencies()
+    {
+        return $this->hasMany(TourismAgency::class, 'type_id')->select( 'agency_name', 'city', 'phone_number', 'email', 'location', 'commercial_record', 'price');
+    }
 
 }

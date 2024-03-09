@@ -17,4 +17,8 @@ class Language extends Model
     {
         return $this->hasMany(GuideLanguage::class, 'language_id');
     }
+    public function AgencyLanguages()
+    {
+        return $this->hasMany(AgencyLanguage::class, 'language_id');
+    }
 }

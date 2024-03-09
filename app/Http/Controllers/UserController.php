@@ -14,19 +14,12 @@ class UserController extends Controller
 {
     public function Login(Request $request)
     {
-//        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-//            $user = Auth::user()->with('userType')->first();
-//            return response()->json($user, 200);
-//        }
-//        return response()->json(['message' => "Unauthorized"], 401);
-
-
         $user = User::where(['email'=>$request->email])->first();
         if($user && Hash::check($request->password, $user->password))
         {
             $responseData = [
                 'id' => $user->id,
-                'user_name' => $user->guide_name,
+                'user_name' => $user->user_name,
                 'city' => $user->city,
                 'phone_number' => $user->phone_number,
                 'email' => $user->email,
@@ -48,7 +41,7 @@ class UserController extends Controller
         }
 
         $user = User::create([
-            'user_name' => $request->name,
+            'user_name' => $request->user_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'password_confirmation' => Hash::make($request->password_confirmation),
@@ -56,17 +49,16 @@ class UserController extends Controller
             'phone_number'=> $request->phone_number,
             'gender'=> $request->gender,
             'age'=> $request->age,
-//            'type_id'=> $request->type,
+            'type_id'=> 1 ,
 
 
         ]);
-
-        $user->userType()->associate($request->type);
+        $user->userType()->associate($user->type_id);
         $user->save();
 
         $responseData = [
             'id' => $user->id,
-            'user_name' => $user->guide_name,
+            'user_name' => $user->user_name,
             'city' => $user->city,
             'phone_number' => $user->phone_number,
             'email' => $user->email,
@@ -76,7 +68,5 @@ class UserController extends Controller
         ];
         return response()->json($responseData, 200);
     }
-
-
 
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\TourGuideController;
+use App\Http\Controllers\TourismAgencyController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsersTypeController;
 use Illuminate\Http\Request;
@@ -37,6 +38,12 @@ Route::group(['namespace' => 'User', 'prefix' => 'user'], function () {
 Route::group(['namespace' => 'TourGuide', 'prefix' => 'tourGuide'], function () {
     Route::post('register-tourGuide', [TourGuideController::class, 'create'])->name('tourGuide.registerTourGuide');
     Route::post('login-tourGuide', [TourGuideController::class, 'login'])->name('tourGuide.loginTourGuide');
+
+});
+
+Route::group(['namespace' => 'TourismAgency', 'prefix' => 'tourismAgency'], function () {
+    Route::post('register-tourismAgency', [TourismAgencyController::class, 'create'])->name('tourismAgency.registerTourismAgency');
+    Route::post('login-tourismAgency', [TourismAgencyController::class, 'login'])->name('tourismAgency.loginTourismAgency');
 
 });
 
