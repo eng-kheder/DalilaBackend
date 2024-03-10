@@ -11,16 +11,17 @@ class TourismAgency extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
     protected $fillable = [
-        'agency_name',
-        'city',
-        'phone_number',
+        'name',
         'email',
-        'location',
-        'commercial_record',
-        'type_id',
-        'price' ,
         'password',
         'password_confirmation' ,
+        'city',
+        'phone_number',
+        'location_agency',
+        'commercial_record_agency',
+        'type_id',
+        'price_agency' ,
+        'language_agency' ,
         'updated_at',
         'created_at',
     ];

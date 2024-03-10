@@ -13,15 +13,16 @@ return new class extends Migration
     {
         Schema::create('tourism_agencies', function (Blueprint $table) {
             $table->id();
-            $table->char('agency_name', 50)->nullable(false);
+            $table->char('name', 50)->nullable(false);
             $table->char('city', 50)->nullable(false);
             $table->char('phone_number', 50)->nullable(false)->unique();
             $table->char('email', 50)->nullable(false)->unique();
-            $table->char('location', 50)->nullable(false);
-            $table->char('commercial_record', 50)->nullable(false)->unique();
+            $table->char('location_agency', 50)->nullable(false);
+            $table->char('commercial_record_agency', 50)->nullable(false)->unique();
             $table->unsignedBigInteger('type_id')->nullable()->default(0);
-            $table->double('price')->nullable(false);
+            $table->double('price_agency')->nullable(false);
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('language_agency')->nullable(false);
             $table->char('password', 255)->nullable(false)->default("12345678");
             $table->char('password_confirmation', 255)->nullable(false)->default("12345678");
 

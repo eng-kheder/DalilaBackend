@@ -16,10 +16,11 @@ class TourismAgencyRequest extends FormRequest
     public function rules()
     {
              return [
-                 'agency_name'=> 'required|max:50',
+                 'name'=> 'required|max:50',
                  'city'=> 'required|max:50 ',
-                 'location'=> 'required|max:50 ',
-                 'price'=> 'required ',
+                 'location_agency'=> 'required|max:50 ',
+                 'price_agency'=> 'required ',
+                 'language_agency'=>'required|max:255',
                  'password' => 'required|max:255',
                  'password_confirmation' => 'required|max:255',
                  'phone_number' => [
@@ -32,7 +33,7 @@ class TourismAgencyRequest extends FormRequest
                      ' max:50',
                      'unique:tourism_agencies,email'
                  ],
-                 'commercial_record' => [
+                 'commercial_record_agency' => [
                      'required',
                      ' max:50',
                      'unique:tourism_agencies,email'

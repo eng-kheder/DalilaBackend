@@ -13,15 +13,16 @@ return new class extends Migration
     {
         Schema::create('tour_guides', function (Blueprint $table) {
             $table->id();
-            $table->char('guide_name', 50)->nullable(false);
+            $table->char('name', 50)->nullable(false);
             $table->char('city', 50)->nullable(false);
             $table->char('phone_number', 50)->nullable(false)->unique();
             $table->char('email', 50)->nullable(false)->unique();
-            $table->boolean('gender')->default(false)->nullable(false);
-            $table->integer('age')->nullable(false);
+            $table->boolean('gender_guide')->default(false)->nullable(false);
+            $table->integer('age_guide')->nullable(false);
             $table->unsignedBigInteger('type_id')->nullable()->default(0);
-            $table->double('price')->nullable(false);
+            $table->double('price_guide')->nullable(false);
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('language_guide')->nullable(false);
             $table->char('password', 255)->nullable(false)->default("12345678");
             $table->char('password_confirmation', 255)->nullable(false)->default("12345678");
 

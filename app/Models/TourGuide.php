@@ -11,18 +11,20 @@ class TourGuide extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
     protected $fillable = [
-        'guide_name',
+        'name',
+        'email',
+        'password',
+        'password_confirmation' ,
         'city',
         'phone_number',
-        'email',
-        'gender',
-        'age',
-        'price',
+        'gender_guide',
+        'age_guide',
+        'price_guide',
         'updated_at',
         'created_at',
         'type_id',
-        'password',
-        'password_confirmation' ,
+        'language_guide' ,
+
     ];
 
     protected $hidden = [

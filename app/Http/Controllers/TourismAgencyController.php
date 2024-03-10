@@ -16,19 +16,21 @@ class TourismAgencyController extends Controller
         {
             $responseData = [
                 'id' => $tourismAgency->id,
-                'agency_name' => $tourismAgency->agency_name,
+                'name' => $tourismAgency->name,
                 'city' => $tourismAgency->city,
                 'phone_number' => $tourismAgency->phone_number,
                 'email' => $tourismAgency->email,
-                'location' => $tourismAgency->location,
-                'commercial_record' => $tourismAgency->commercial_record,
-                'price' => $tourismAgency->price,
-                'agencyLanguages' => $tourismAgency->agencyLanguages->map(function ($agencyLanguage) {
-                    return [
-                        'language_id' => $agencyLanguage->language->id,
-                        'language_name' => $agencyLanguage->language->language_name
-                    ];
-                }),
+                'location_agency' => $tourismAgency->location_agency,
+                'commercial_record_agency' => $tourismAgency->commercial_record_agency,
+                'price_agency' => $tourismAgency->price_agency,
+                'language_agency' => $tourismAgency->language_agency,
+
+//                'agencyLanguages' => $tourismAgency->agencyLanguages->map(function ($agencyLanguage) {
+//                    return [
+//                        'language_id' => $agencyLanguage->language->id,
+//                        'language_name' => $agencyLanguage->language->language_name
+//                    ];
+//                }),
                 'tourism_agency_type' => $tourismAgency->tourismAgencyType
             ];
             return response()->json($responseData, 200);
@@ -44,43 +46,46 @@ class TourismAgencyController extends Controller
             }
 
         $tourismAgency = TourismAgency::create([
-                'agency_name' => $request->agency_name,
+                'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'password_confirmation' => Hash::make($request->password_confirmation),
                 'city' => $request->city,
                 'phone_number' => $request->phone_number,
-                'location' => $request->location,
-                'commercial_record' => $request->commercial_record,
-                'price' => $request->price,
                  'type_id'=>3,
+            'location_agency' => $request->location_agency,
+            'commercial_record_agency' => $request->commercial_record_agency,
+            'price_agency' => $request->price_agency,
+            'language_agency' => $request->language_agency,
             ]);
         $tourismAgency->tourismAgencyType()->associate($tourismAgency->type_id);
         $tourismAgency->save();
 
-        // Loop through the languages and associate them with the TourGuide
-        foreach ($request->languages as $languageId) {
-            $tourismAgency->agencyLanguages()->create([
-                'language_id' => $languageId
-            ]);
-        }
+//        // Loop through the languages and associate them with the TourGuide
+//        foreach ($request->languages as $languageId) {
+//            $tourismAgency->agencyLanguages()->create([
+//                'language_id' => $languageId
+//            ]);
+//        }
 
         //output
         $responseData = [
             'id' => $tourismAgency->id,
-            'agency_name' => $tourismAgency->agency_name,
+            'name' => $tourismAgency->name,
             'city' => $tourismAgency->city,
             'phone_number' => $tourismAgency->phone_number,
             'email' => $tourismAgency->email,
-            'location' => $tourismAgency->location,
-            'commercial_record' => $tourismAgency->commercial_record,
-            'price' => $tourismAgency->price,
-            'agencyLanguages' => $tourismAgency->agencyLanguages->map(function ($agencyLanguage) {
-                return [
-                    'language_id' => $agencyLanguage->language->id,
-                    'language_name' => $agencyLanguage->language->language_name
-                ];
-            }),
+            'location_agency' => $tourismAgency->location_agency,
+            'commercial_record_agency' => $tourismAgency->commercial_record_agency,
+            'price_agency' => $tourismAgency->price_agency,
+            'language_agency' => $tourismAgency->language_agency,
+
+//            'agencyLanguages' => $tourismAgency->agencyLanguages->map(function ($agencyLanguage) {
+//                return [
+//                    'language_id' => $agencyLanguage->language->id,
+//                    'language_name' => $agencyLanguage->language->language_name
+//                ];
+//            }),
             'tourism_agency_type' => $tourismAgency->tourismAgencyType
         ];
 

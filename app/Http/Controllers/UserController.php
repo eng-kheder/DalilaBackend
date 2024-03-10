@@ -19,13 +19,13 @@ class UserController extends Controller
         {
             $responseData = [
                 'id' => $user->id,
-                'user_name' => $user->user_name,
+                'name' => $user->name,
                 'city' => $user->city,
                 'phone_number' => $user->phone_number,
                 'email' => $user->email,
-                'gender' => $user->gender,
-                'age' => $user->age,
-                'user_type' => $user->userType
+                'gender_user' => $user->gender_user,
+                'age_user' => $user->age_user,
+                'user_type' => $user->userType,
             ];
             return response()->json($responseData, 200);
         }
@@ -41,14 +41,14 @@ class UserController extends Controller
         }
 
         $user = User::create([
-            'user_name' => $request->user_name,
+            'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'password_confirmation' => Hash::make($request->password_confirmation),
             'city' => $request->city,
             'phone_number'=> $request->phone_number,
-            'gender'=> $request->gender,
-            'age'=> $request->age,
+            'gender_user'=> $request->gender_user,
+            'age_user'=> $request->age_user,
             'type_id'=> 1 ,
 
 
@@ -58,13 +58,13 @@ class UserController extends Controller
 
         $responseData = [
             'id' => $user->id,
-            'user_name' => $user->user_name,
+            'name' => $user->name,
             'city' => $user->city,
             'phone_number' => $user->phone_number,
             'email' => $user->email,
-            'gender' => $user->gender,
-            'age' => $user->age,
-            'user_type' => $user->userType
+            'gender_user' => $user->gender_user,
+            'age_user' => $user->age_user,
+            'user_type' => $user->userType,
         ];
         return response()->json($responseData, 200);
     }
