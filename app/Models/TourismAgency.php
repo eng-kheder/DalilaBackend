@@ -22,8 +22,6 @@ class TourismAgency extends Model
         'type_id',
         'price_agency' ,
         'language_agency' ,
-        'updated_at',
-        'created_at',
     ];
     protected $hidden = [
         'remember_token',
@@ -43,6 +41,10 @@ class TourismAgency extends Model
     public function agencyLanguages()
     {
         return $this->hasMany(AgencyLanguage::class, 'agency_id')->select( 'agency_id','language_id');
+    }
+    public function agencyRequests()
+    {
+        return $this->hasMany(Requests::class, 'agency_id');
     }
 
 }

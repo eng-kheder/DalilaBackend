@@ -26,10 +26,7 @@ class User extends Authenticatable
         'phone_number',
         'gender_user',
         'age_user',
-        'updated_at',
-        'created_at',
         'type_id',
-
     ];
 
     /**
@@ -56,6 +53,10 @@ class User extends Authenticatable
     public function userType()
     {
         return $this->belongsTo(UsersType::class, 'type_id')->select('id', 'type_title');
+    }
+    public function userRequests()
+    {
+        return $this->hasMany(Requests::class, 'user_id');
     }
 
 

@@ -89,7 +89,21 @@ class TourismAgencyController extends Controller
             'tourism_agency_type' => $tourismAgency->tourismAgencyType
         ];
 
-        return response()->json($responseData, 200);        }
+        return response()->json($responseData, 200);
+    }
+
+    public function getAllAgencies()  //index
+    {
+        $allAgencies = TourismAgency::select('id','name','email', 'city','phone_number','location_agency','commercial_record_agency','price_agency','language_agency' )->get();
+        return response()->json($allAgencies, 200);
+    }
+
+    public function getAgency($id)  //show
+    {
+        $agency = TourismAgency::select('id','name','email', 'city','phone_number','location_agency','commercial_record_agency','price_agency','language_agency' )->find($id);
+        return response()->json($agency, 200);
+    }
+
 
 }
 

@@ -69,4 +69,10 @@ class UserController extends Controller
         return response()->json($responseData, 200);
     }
 
+    public function getUser($id)  //show
+    {
+        $user = User::select('id','name','email', 'city','phone_number','gender_user','age_user')->find($id);
+        return response()->json($user, 200);
+    }
+
 }

@@ -88,7 +88,21 @@ class TourGuideController extends Controller
             'tour_guide_type' => $tourGuide->tourGuideType
         ];
 
-        return response()->json($responseData, 200);        }
+        return response()->json($responseData, 200);
+    }
+
+    public function getAllGuides()  //index
+    {
+        $allGuides = TourGuide::select('id','name','email', 'city','phone_number','gender_guide','age_guide','price_guide','language_guide' )->get();
+        return response()->json($allGuides, 200);
+    }
+
+    public function getGuide($id)  //show
+    {
+        $guide = TourGuide::select('id','name','email', 'city','phone_number','gender_guide','age_guide','price_guide','language_guide' )->find($id);
+        return response()->json($guide, 200);
+    }
+
 
 
 }

@@ -20,17 +20,13 @@ class TourGuide extends Model
         'gender_guide',
         'age_guide',
         'price_guide',
-        'updated_at',
-        'created_at',
         'type_id',
         'language_guide' ,
-
     ];
 
     protected $hidden = [
         'remember_token',
         'email_verified_at',
-
     ];
 
     protected $casts = [
@@ -45,5 +41,9 @@ class TourGuide extends Model
     public function guideLanguages()
     {
         return $this->hasMany(GuideLanguage::class, 'guide_id')->select( 'guide_id','language_id');
+    }
+    public function guideRequests()
+    {
+        return $this->hasMany(Requests::class, 'guide_id');
     }
 }

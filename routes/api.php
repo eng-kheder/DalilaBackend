@@ -31,6 +31,7 @@ Route::group(['namespace' => 'UserTypes', 'prefix' => 'userTypes'], function () 
 Route::group(['namespace' => 'User', 'prefix' => 'user'], function () {
     Route::post('register-user', [UserController::class, 'create'])->name('user.registerUser');
     Route::post('login-user', [UserController::class, 'login'])->name('user.loginUser');
+    Route::get('get-user/{id}', [UserController::class, 'getUser'])->name('user.getUser');
 
 });
 
@@ -38,12 +39,16 @@ Route::group(['namespace' => 'User', 'prefix' => 'user'], function () {
 Route::group(['namespace' => 'TourGuide', 'prefix' => 'tourGuide'], function () {
     Route::post('register-tourGuide', [TourGuideController::class, 'create'])->name('tourGuide.registerTourGuide');
     Route::post('login-tourGuide', [TourGuideController::class, 'login'])->name('tourGuide.loginTourGuide');
+    Route::get('get-all-guides', [TourGuideController::class, 'getAllGuides'])->name('tourGuide.getAllGuides');
+    Route::get('get-guide/{id}', [TourGuideController::class, 'getGuide'])->name('tourGuide.getGuide');
 
 });
 
 Route::group(['namespace' => 'TourismAgency', 'prefix' => 'tourismAgency'], function () {
     Route::post('register-tourismAgency', [TourismAgencyController::class, 'create'])->name('tourismAgency.registerTourismAgency');
     Route::post('login-tourismAgency', [TourismAgencyController::class, 'login'])->name('tourismAgency.loginTourismAgency');
+    Route::get('get-all-agencies', [TourismAgencyController::class, 'getAllAgencies'])->name('tourismAgency.getAllAgencies');
+    Route::get('get-agency/{id}', [TourismAgencyController::class, 'getAgency'])->name('tourismAgency.getAgency');
 
 });
 
