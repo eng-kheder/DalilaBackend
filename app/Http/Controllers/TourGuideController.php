@@ -42,7 +42,7 @@ class TourGuideController extends Controller
     public function create(TourGuideRequest $request)    //register
     {
             if ($request->password !== $request->password_confirmation) {
-                return response()->json("Password and password confirmation do not match", 400);
+                return response()->json(['message' => "Password and password confirmation do not match"], 400);
             }
 
             $tourGuide = TourGuide::create([

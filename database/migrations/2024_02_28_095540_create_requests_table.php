@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable(false);
             $table->unsignedBigInteger('agency_id')->default(null)->nullable();
             $table->unsignedBigInteger('guide_id')->default(null)->nullable();
-            $table->integer('status')->nullable(false);
+            $table->integer('status')->nullable(false)->default(0);
             $table->date('request_date')->nullable(false);
             $table->timestamps();
         });

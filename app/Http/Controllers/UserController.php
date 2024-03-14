@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Models\TourGuide;
+use App\Models\TourismAgency;
 use App\Models\User;
 use App\Models\UsersType;
 use Illuminate\Http\Request;
@@ -37,7 +39,7 @@ class UserController extends Controller
     public function create(UserRequest $request)    //register
     {
         if ($request->password !== $request->password_confirmation) {
-            return response()->json("Password and password confirmation do not match", 400);
+            return response()->json(['message' => "Password and password confirmation do not match"], 400);
         }
 
         $user = User::create([
@@ -73,6 +75,14 @@ class UserController extends Controller
     {
         $user = User::select('id','name','email', 'city','phone_number','gender_user','age_user')->find($id);
         return response()->json($user, 200);
+    }
+
+    public function search($name)
+    {
+        $guides = TourGuide::where('name','like', '%'.$name.'%')->select('id','name', 'email', 'city', 'phone_number', 'gender_guide', 'age_guide', 'price_guide', 'language_guide' )->get();
+        $agencies = TourismAgency::where('name','like', '%'.$name.'%')->select('id','name', 'email', 'city', 'phone_number', 'location_agency', 'commercial_record_agency', 'price_agency' , 'language_agency' ,)->get();
+        $dataArray = ['guides' => $guides, 'agencies' => $agencies];
+        return response()->json($dataArray, 200);
     }
 
 }

@@ -8,6 +8,16 @@ use App\Http\Requests\UpdateRequestsRequest;
 
 class RequestsController extends Controller
 {
+
+    public function delete($id) //cancel request
+    {
+        $request = Requests::find($id);
+        if ($request->status==1)
+            return response()->json(['message' => "deleted fails"], 400);
+        $request->delete();
+        return response()->json(['message' => "deleted successfully" ], 200);
+    }
+
     /**
      * Display a listing of the resource.
      */

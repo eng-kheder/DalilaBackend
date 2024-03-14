@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\RequestsController;
 use App\Http\Controllers\TourGuideController;
 use App\Http\Controllers\TourismAgencyController;
 use App\Http\Controllers\UserController;
@@ -32,6 +33,7 @@ Route::group(['namespace' => 'User', 'prefix' => 'user'], function () {
     Route::post('register-user', [UserController::class, 'create'])->name('user.registerUser');
     Route::post('login-user', [UserController::class, 'login'])->name('user.loginUser');
     Route::get('get-user/{id}', [UserController::class, 'getUser'])->name('user.getUser');
+    Route::get('search/{name}', [UserController::class, 'search'])->name('user.search');
 
 });
 
@@ -51,6 +53,11 @@ Route::group(['namespace' => 'TourismAgency', 'prefix' => 'tourismAgency'], func
     Route::get('get-agency/{id}', [TourismAgencyController::class, 'getAgency'])->name('tourismAgency.getAgency');
 
 });
+
+Route::group(['namespace' => 'Request', 'prefix' => 'request'], function () {
+    Route::get('cancel-request/{id}', [RequestsController::class, 'delete'])->name('request.cancelRequest');
+});
+
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
