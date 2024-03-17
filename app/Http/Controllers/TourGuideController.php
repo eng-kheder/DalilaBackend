@@ -90,6 +90,12 @@ class TourGuideController extends Controller
 
         return response()->json($responseData, 200);
     }
+    public function update(Request $request, $id)
+    {
+        $tourGuide = TourGuide::find($id);
+        $tourGuide->update($request->all());
+        return response()->json(['message' => "updated successfully"], 200);
+    }
 
     public function getAllGuides()  //index
     {
@@ -101,6 +107,20 @@ class TourGuideController extends Controller
     {
         $guide = TourGuide::select('id','name','email', 'city','phone_number','gender_guide','age_guide','price_guide','language_guide' )->find($id);
         return response()->json($guide, 200);
+    }
+
+    public function getGuideRequests($guideId)
+    {
+        $guide = TourGuide::find($guideId);
+        $guideRequests=$guide->guideRequests;
+        return response()->json($guideRequests, 200);
+    }
+
+    public function getGuideRates($guideId)
+    {
+        $guide = TourGuide::find($guideId);
+        $guideRates=$guide->guideRequests->pluck('rate');
+        return response()->json($guideRates, 200);
     }
 
 

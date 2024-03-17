@@ -44,6 +44,10 @@ class TourGuide extends Model
     }
     public function guideRequests()
     {
-        return $this->hasMany(Requests::class, 'guide_id');
+        return $this->hasMany(Requests::class, 'guide_id')->select('id', 'user_id', 'status', 'guide_id', 'agency_id', 'request_date');
+    }
+    public function guideReports()
+    {
+        return $this->hasMany(Reports::class, 'guide_id')->select('id', 'user_id', 'description', 'agency_id', 'guide_id');
     }
 }

@@ -28,6 +28,10 @@ class Requests extends Model
     {
         return $this->belongsTo(TourismAgency::class, 'agency_id')->select('name', 'email', 'password', 'password_confirmation' , 'city', 'phone_number', 'location_agency', 'commercial_record_agency', 'type_id', 'price_agency' , 'language_agency'  );
     }
+    public function rate()
+    {
+        return $this->hasOne(Rates::class, 'request_id')->select('id','user_id', 'request_id', 'description', 'value');
+    }
 
 
 }

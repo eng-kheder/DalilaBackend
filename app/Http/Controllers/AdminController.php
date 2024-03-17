@@ -2,65 +2,66 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AdminRequest;
 use App\Models\Admin;
-use App\Http\Requests\StoreAdminRequest;
-use App\Http\Requests\UpdateAdminRequest;
+use App\Models\Reports;
+use App\Models\TourGuide;
+use App\Models\TourismAgency;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+
 
 class AdminController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function Login(Request $request)
     {
-        //
+        $admin = Admin::where(['email'=>$request->email])->first();
+        if($admin && Hash::check($request->password, $admin->password))
+        {
+            $responseData = [
+                'id' => $admin->id,
+                'name'=> $admin->name,
+                'email'=> $admin->email,
+            ];
+            return response()->json($responseData, 200);
+        }
+        return response()->json(['message' => "Unauthorized"], 401);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(AdminRequest $request)    //register
     {
-        //
+        if ($request->password !== $request->password_confirmation) {
+            return response()->json(['message' => "Password and password confirmation do not match"], 400);
+        }
+        $admin = Admin::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'password_confirmation' => Hash::make($request->password_confirmation),
+        ]);
+        $responseData = [
+            'id' => $admin->id,
+            'name'=> $admin->name,
+            'email'=> $admin->email,
+        ];
+        return response()->json($responseData, 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreAdminRequest $request)
+    public function deleteGuide($id)
     {
-        //
+        $tourGuide = TourGuide::find($id);
+        $tourGuide->delete();
+        return response()->json(['message' => "deleted successfully" ], 200);
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Admin $admin)
+    public function deleteAgency($id)
     {
-        //
+        $tourAgency = TourismAgency::find($id);
+        $tourAgency->delete();
+        return response()->json(['message' => "deleted successfully" ], 200);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Admin $admin)
+    public function getAllReports()
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateAdminRequest $request, Admin $admin)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Admin $admin)
-    {
-        //
+        $allReports = Reports::select('id','user_id', 'description', 'agency_id', 'guide_id')->get();
+        return response()->json($allReports, 200);
     }
 }

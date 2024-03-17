@@ -13,4 +13,14 @@ class Rates extends Model
         'request_id',
         'description',
         'value',
-    ];}
+    ];
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id')->select('name', 'email', 'password', 'password_confirmation' , 'city', 'phone_number', 'gender_user', 'age_user', 'type_id');
+    }
+    public function request()
+    {
+        return $this->hasOne(Requests::class, 'request_id');
+    }
+
+}

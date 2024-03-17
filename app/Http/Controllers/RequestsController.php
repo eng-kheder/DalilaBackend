@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Requests;
-use App\Http\Requests\StoreRequestsRequest;
-use App\Http\Requests\UpdateRequestsRequest;
+use App\Http\Requests\RequestRequest;
+use Illuminate\Http\Request;
+
 
 class RequestsController extends Controller
 {
@@ -18,59 +19,24 @@ class RequestsController extends Controller
         return response()->json(['message' => "deleted successfully" ], 200);
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+   public function create(RequestRequest $req)  // add request
     {
-        //
+        $request = Requests::create([
+            'user_id'=> $req->user_id,
+            'guide_id'=> $req->guide_id,
+            'agency_id'=> $req->agency_id,
+            'request_date'=> $req->request_date,
+        ]);
+        return response()->json(['message' => "created successfully" ], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function updateRequestStatus(Request $req)  // update request status
     {
-        //
+        $request = Requests::find($req->id);
+        $request->update([
+            'status'=> $req->status,
+        ]);
+        return response()->json(['message' => "updated successfully"], 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreRequestsRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Requests $requests)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Requests $requests)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateRequestsRequest $request, Requests $requests)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Requests $requests)
-    {
-        //
-    }
 }

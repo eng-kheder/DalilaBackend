@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('admins', function (Blueprint $table) {
             $table->id();
-            $table->char('admin_name', 50)->nullable(false);
+            $table->char('name', 50)->nullable(false);
             $table->char('email', 50)->nullable(false)->unique();
-            $table->char('password', 50)->nullable(false);
+            $table->char('password', 255)->nullable(false)->default("12345678");
+            $table->char('password_confirmation', 255)->nullable(false)->default("12345678");
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

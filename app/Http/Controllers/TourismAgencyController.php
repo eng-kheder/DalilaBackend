@@ -92,6 +92,13 @@ class TourismAgencyController extends Controller
         return response()->json($responseData, 200);
     }
 
+    public function update(Request $request, $id)
+    {
+        $tourAgency = TourismAgency::find($id);
+        $tourAgency->update($request->all());
+        return response()->json(['message' => "updated successfully"], 200);
+    }
+
     public function getAllAgencies()  //index
     {
         $allAgencies = TourismAgency::select('id','name','email', 'city','phone_number','location_agency','commercial_record_agency','price_agency','language_agency' )->get();
@@ -102,6 +109,19 @@ class TourismAgencyController extends Controller
     {
         $agency = TourismAgency::select('id','name','email', 'city','phone_number','location_agency','commercial_record_agency','price_agency','language_agency' )->find($id);
         return response()->json($agency, 200);
+    }
+
+    public function getAgencyRequests($agencyId)
+    {
+        $agency = TourismAgency::find($agencyId);
+        $agencyRequests=$agency->agencyRequests;
+        return response()->json($agencyRequests, 200);
+    }
+    public function getAgencyRates($agencyId)
+    {
+        $agency = TourismAgency::find($agencyId);
+        $agencyRates=$agency->agencyRequests->pluck('rate');
+        return response()->json($agencyRates, 200);
     }
 
 

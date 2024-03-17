@@ -12,11 +12,12 @@ class Admin extends Model
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
-        'admin_name',
+        'name',
         'email',
+        'password',
+        'password_confirmation',
     ];
     protected $hidden = [
-        'password',
         'remember_token',
     ];
 
