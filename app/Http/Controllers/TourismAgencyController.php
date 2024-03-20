@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TourismAgencyRequest;
+use App\Models\TourGuide;
 use App\Models\TourismAgency;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -31,7 +33,11 @@ class TourismAgencyController extends Controller
 //                        'language_name' => $agencyLanguage->language->language_name
 //                    ];
 //                }),
-                'tourism_agency_type' => $tourismAgency->tourismAgencyType
+                'tourism_agency_type' => $tourismAgency->tourismAgencyType,
+                'created_at'=> $tourismAgency->created_at ,
+                'updated_at'=> $tourismAgency->updated_at ,
+                'averageRate'=> $this->getAvgAgencyRates( $tourismAgency->id)->original,
+
             ];
             return response()->json($responseData, 200);
         }
@@ -86,7 +92,11 @@ class TourismAgencyController extends Controller
 //                    'language_name' => $agencyLanguage->language->language_name
 //                ];
 //            }),
-            'tourism_agency_type' => $tourismAgency->tourismAgencyType
+            'tourism_agency_type' => $tourismAgency->tourismAgencyType,
+            'created_at'=> $tourismAgency->created_at ,
+            'updated_at'=> $tourismAgency->updated_at ,
+            'averageRate'=> $this->getAvgAgencyRates( $tourismAgency->id)->original,
+
         ];
 
         return response()->json($responseData, 200);
@@ -101,27 +111,93 @@ class TourismAgencyController extends Controller
 
     public function getAllAgencies()  //index
     {
-        $allAgencies = TourismAgency::select('id','name','email', 'city','phone_number','location_agency','commercial_record_agency','price_agency','language_agency' )->get();
-        return response()->json($allAgencies, 200);
+        $allAgencies = TourismAgency::get();
+        $formattedAgencies = [];
+        foreach ($allAgencies as $tourismAgency) {
+            $formattedAgencies[] = [
+                'id' => $tourismAgency->id,
+                'name' => $tourismAgency->name,
+                'city' => $tourismAgency->city,
+                'phone_number' => $tourismAgency->phone_number,
+                'email' => $tourismAgency->email,
+                'location_agency' => $tourismAgency->location_agency,
+                'commercial_record_agency' => $tourismAgency->commercial_record_agency,
+                'price_agency' => $tourismAgency->price_agency,
+                'language_agency' => $tourismAgency->language_agency,
+                'tourism_agency_type' => $tourismAgency->tourismAgencyType,
+                'created_at'=> $tourismAgency->created_at ,
+                'updated_at'=> $tourismAgency->updated_at ,
+                'averageRate'=> $this->getAvgAgencyRates( $tourismAgency->id)->original,
+
+            ];
+        }
+        return response()->json($formattedAgencies, 200);
     }
 
     public function getAgency($id)  //show
     {
-        $agency = TourismAgency::select('id','name','email', 'city','phone_number','location_agency','commercial_record_agency','price_agency','language_agency' )->find($id);
-        return response()->json($agency, 200);
+        $tourismAgency = TourismAgency::find($id);
+        $tourismAgency = [
+            'id' => $tourismAgency->id,
+            'name' => $tourismAgency->name,
+            'city' => $tourismAgency->city,
+            'phone_number' => $tourismAgency->phone_number,
+            'email' => $tourismAgency->email,
+            'location_agency' => $tourismAgency->location_agency,
+            'commercial_record_agency' => $tourismAgency->commercial_record_agency,
+            'price_agency' => $tourismAgency->price_agency,
+            'language_agency' => $tourismAgency->language_agency,
+            'tourism_agency_type' => $tourismAgency->tourismAgencyType,
+            'created_at'=> $tourismAgency->created_at ,
+            'updated_at'=> $tourismAgency->updated_at ,
+            'averageRate'=> $this->getAvgAgencyRates( $tourismAgency->id)->original,
+
+        ];
+        return response()->json($tourismAgency, 200);
     }
 
     public function getAgencyRequests($agencyId)
     {
         $agency = TourismAgency::find($agencyId);
         $agencyRequests=$agency->agencyRequests;
-        return response()->json($agencyRequests, 200);
+        $formattedAgencyRequests = [];
+        foreach ($agencyRequests as $agencyRequest) {
+            $formattedAgencyRequests[] = [
+                'id'=> $agencyRequest->id,
+                'user_id' => User::find($agencyRequest->user_id) ? (new UserController())->getUser($agencyRequest->user_id)->original: null,
+                'status'=> $agencyRequest->status,
+                'guide_id'=> TourGuide::find($agencyRequest->guide_id) ? (new TourGuideController())->getGuide($agencyRequest->guide_id)->original: null,
+                'agency_id'=> TourismAgency::find($agencyRequest->agency_id) ? (new TourismAgencyController())->getAgency($agencyRequest->agency_id)->original: null,
+                'request_date'=>$agencyRequest->request_date,
+                'created_at'=>$agencyRequest->created_at,
+            ];
+        }
+        return response()->json($formattedAgencyRequests, 200);
+
     }
     public function getAgencyRates($agencyId)
     {
         $agency = TourismAgency::find($agencyId);
         $agencyRates=$agency->agencyRequests->pluck('rate');
         return response()->json($agencyRates, 200);
+    }
+
+    public function getAvgAgencyRates($agencyId)
+    {
+        $agency = TourismAgency::find($agencyId);
+        $avgAgencyRates = $this->getAgencyRates($agencyId)->original;
+        $totalValue = 0;
+        $numRates = count($avgAgencyRates);
+
+        foreach ($avgAgencyRates as $avgAgencyRate) {
+            $totalValue += $avgAgencyRate->value;
+        }
+        if ($numRates > 0) {
+            $averageValue = $totalValue / $numRates;
+        } else {
+            $averageValue = 0;
+        }
+        return response()->json($averageValue, 200);
     }
 
 

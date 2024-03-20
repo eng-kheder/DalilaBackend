@@ -42,7 +42,7 @@ class User extends Authenticatable
     }
     public function userRequests()
     {
-        return $this->hasMany(Requests::class, 'user_id')->select('id', 'user_id', 'status', 'guide_id', 'agency_id', 'request_date');
+        return $this->hasMany(Requests::class, 'user_id')->select('id', 'user_id', 'status', 'guide_id', 'agency_id', 'request_date','created_at');
     }
     public function userReports()
     {
@@ -52,6 +52,18 @@ class User extends Authenticatable
     {
         return $this->hasMany(Rates::class, 'user_id')->select('id', 'user_id', 'request_id', 'description', 'value');
     }
+
+
+//// format for created_at and updated_at
+   public function getCreatedAtFormattedAttribute()
+    {
+        return $this->created_at->format('Y-m-d');
+    }
+    public function getUpdatedAtFormattedAttribute()
+    {
+        return $this->updated_at->format('Y-m-d');
+    }
+
 
 
 }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TourGuideRequest;
 use App\Models\TourGuide;
+use App\Models\TourismAgency;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -31,7 +33,10 @@ class TourGuideController extends Controller
 //                        'language_name' => $guideLanguage->language->language_name
 //                    ];
 //                }),
-                'tour_guide_type' => $tourGuide->tourGuideType
+                'tour_guide_type' => $tourGuide->tourGuideType,
+                'created_at'=> $tourGuide->created_at ,
+                'updated_at'=> $tourGuide->updated_at ,
+                'averageRate'=> $this->getAvgGuideRates( $tourGuide->id)->original,
             ];
             return response()->json($responseData, 200);
         }
@@ -85,7 +90,11 @@ class TourGuideController extends Controller
 //                    'language_name' => $guideLanguage->language->language_name
 //                ];
 //            }),
-            'tour_guide_type' => $tourGuide->tourGuideType
+            'tour_guide_type' => $tourGuide->tourGuideType,
+            'created_at'=> $tourGuide->created_at ,
+            'updated_at'=> $tourGuide->updated_at ,
+            'averageRate'=> $this->getAvgGuideRates( $tourGuide->id)->original,
+
         ];
 
         return response()->json($responseData, 200);
@@ -99,13 +108,52 @@ class TourGuideController extends Controller
 
     public function getAllGuides()  //index
     {
-        $allGuides = TourGuide::select('id','name','email', 'city','phone_number','gender_guide','age_guide','price_guide','language_guide' )->get();
-        return response()->json($allGuides, 200);
+        $allGuides = TourGuide::get();
+        $formattedGuides = [];
+        foreach ($allGuides as $guide) {
+            $formattedGuides[] = [
+                'id' => $guide->id,
+                'name' => $guide->name,
+                'city' => $guide->city,
+                'phone_number' => $guide->phone_number,
+                'email' => $guide->email,
+                'gender_guide' => $guide->gender_guide,
+                'age_guide' => $guide->age_guide,
+                'price_guide' => $guide->price_guide,
+                'language_guide' => $guide->language_guide,
+                'tour_guide_type' => $guide->tourGuideType,
+                'created_at' => $guide->created_at,
+                'updated_at' => $guide->updated_at,
+                'averageRate'=> $this->getAvgGuideRates( $guide->id)->original,
+            ];
+        }
+        return response()->json($formattedGuides, 200);
     }
 
     public function getGuide($id)  //show
     {
-        $guide = TourGuide::select('id','name','email', 'city','phone_number','gender_guide','age_guide','price_guide','language_guide' )->find($id);
+        $guide = TourGuide::find($id);
+        $guide = [
+            'id' => $guide->id,
+            'name' => $guide->name,
+            'city' => $guide->city,
+            'phone_number' => $guide->phone_number,
+            'email' => $guide->email,
+            'gender_guide' => $guide->gender_guide,
+            'age_guide' => $guide->age_guide,
+            'price_guide' => $guide->price_guide,
+            'language_guide' => $guide->language_guide,
+//            'guide_languages' => $tourGuide->guideLanguages->map(function ($guideLanguage) {
+//                return [
+//                    'language_id' => $guideLanguage->language->id,
+//                    'language_name' => $guideLanguage->language->language_name
+//                ];
+//            }),
+            'tour_guide_type' => $guide->tourGuideType,
+            'created_at'=> $guide->created_at ,
+            'updated_at'=> $guide->updated_at ,
+            'averageRate'=> $this->getAvgGuideRates( $guide->id)->original,
+        ];
         return response()->json($guide, 200);
     }
 
@@ -113,7 +161,19 @@ class TourGuideController extends Controller
     {
         $guide = TourGuide::find($guideId);
         $guideRequests=$guide->guideRequests;
-        return response()->json($guideRequests, 200);
+        $formattedGuideRequests = [];
+        foreach ($guideRequests as $guideRequest) {
+            $formattedGuideRequests[] = [
+                'id'=> $guideRequest->id,
+                'user_id' => User::find($guideRequest->user_id) ? (new UserController())->getUser($guideRequest->user_id)->original: null,
+                'status'=> $guideRequest->status,
+                'guide_id'=> TourGuide::find($guideRequest->guide_id) ? (new TourGuideController())->getGuide($guideRequest->guide_id)->original: null,
+                'agency_id'=> TourismAgency::find($guideRequest->agency_id) ? (new TourismAgencyController())->getAgency($guideRequest->agency_id)->original: null,
+                'request_date'=>$guideRequest->request_date,
+                'created_at'=>$guideRequest->created_at,
+            ];
+        }
+        return response()->json($formattedGuideRequests, 200);
     }
 
     public function getGuideRates($guideId)
@@ -121,6 +181,24 @@ class TourGuideController extends Controller
         $guide = TourGuide::find($guideId);
         $guideRates=$guide->guideRequests->pluck('rate');
         return response()->json($guideRates, 200);
+    }
+
+    public function getAvgGuideRates($guideId)
+    {
+        $guide = TourGuide::find($guideId);
+        $avgGuideRates = $this->getGuideRates($guide->id)->original;
+        $totalValue = 0;
+        $numRates = count($avgGuideRates);
+
+        foreach ($avgGuideRates as $avgGuideRate) {
+            $totalValue += $avgGuideRate->value;
+        }
+        if ($numRates > 0) {
+            $averageValue = $totalValue / $numRates;
+        } else {
+            $averageValue = 0;
+        }
+        return response()->json($averageValue, 200);
     }
 
 

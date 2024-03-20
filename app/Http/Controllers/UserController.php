@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Models\Requests;
 use App\Models\TourGuide;
 use App\Models\TourismAgency;
 use App\Models\User;
@@ -28,6 +29,8 @@ class UserController extends Controller
                 'gender_user' => $user->gender_user,
                 'age_user' => $user->age_user,
                 'user_type' => $user->userType,
+                'created_at'=> $user->created_at ,
+                'updated_at'=> $user->updated_at  ,
             ];
             return response()->json($responseData, 200);
         }
@@ -54,6 +57,7 @@ class UserController extends Controller
             'type_id'=> 1 ,
 
 
+
         ]);
         $user->userType()->associate($user->type_id);
         $user->save();
@@ -67,21 +71,74 @@ class UserController extends Controller
             'gender_user' => $user->gender_user,
             'age_user' => $user->age_user,
             'user_type' => $user->userType,
+            'created_at'=> $user->created_at ,
+            'updated_at'=> $user->updated_at  ,
         ];
         return response()->json($responseData, 200);
     }
 
     public function getUser($id)  //show
     {
-        $user = User::select('id','name','email', 'city','phone_number','gender_user','age_user')->find($id);
+        $user = User::find($id);
+        $user = [
+            'id' => $user->id,
+            'name' => $user->name,
+            'city' => $user->city,
+            'phone_number' => $user->phone_number,
+            'email' => $user->email,
+            'gender_user' => $user->gender_user,
+            'age_user' => $user->age_user,
+            'user_type' => $user->userType,
+            'created_at'=> $user->created_at ,
+            'updated_at'=> $user->updated_at  ,
+            ];
         return response()->json($user, 200);
     }
 
     public function search($name)
     {
-        $guides = TourGuide::where('name','like', '%'.$name.'%')->select('id','name', 'email', 'city', 'phone_number', 'gender_guide', 'age_guide', 'price_guide', 'language_guide' )->get();
-        $agencies = TourismAgency::where('name','like', '%'.$name.'%')->select('id','name', 'email', 'city', 'phone_number', 'location_agency', 'commercial_record_agency', 'price_agency' , 'language_agency' ,)->get();
-        $dataArray = ['guides' => $guides, 'agencies' => $agencies];
+
+        $guides = TourGuide::where('name','like', '%'.$name.'%')->get();
+        $formattedGuides = [];
+        foreach ($guides as $guide) {
+            $formattedGuides[] = [
+                'id' => $guide->id,
+                'name' => $guide->name,
+                'city' => $guide->city,
+                'phone_number' => $guide->phone_number,
+                'email' => $guide->email,
+                'gender_guide' => $guide->gender_guide,
+                'age_guide' => $guide->age_guide,
+                'price_guide' => $guide->price_guide,
+                'language_guide' => $guide->language_guide,
+                'tour_guide_type' => $guide->tourGuideType,
+                'created_at' => $guide->created_at,
+                'updated_at' => $guide->updated_at,
+                'averageRate'=> (new TourGuideController)->getAvgGuideRates( $guide->id)->original,
+
+            ];
+        }
+        $agencies = TourismAgency::where('name','like', '%'.$name.'%')->get();
+        $formattedAgencies = [];
+        foreach ($agencies as $tourismAgency) {
+            $formattedAgencies[] = [
+                'id' => $tourismAgency->id,
+                'name' => $tourismAgency->name,
+                'city' => $tourismAgency->city,
+                'phone_number' => $tourismAgency->phone_number,
+                'email' => $tourismAgency->email,
+                'location_agency' => $tourismAgency->location_agency,
+                'commercial_record_agency' => $tourismAgency->commercial_record_agency,
+                'price_agency' => $tourismAgency->price_agency,
+                'language_agency' => $tourismAgency->language_agency,
+                'tourism_agency_type' => $tourismAgency->tourismAgencyType,
+                'created_at'=> $tourismAgency->created_at ,
+                'updated_at'=> $tourismAgency->updated_at ,
+                'averageRate'=> (new TourismAgencyController())->getAvgAgencyRates( $tourismAgency->id)->original,
+
+            ];
+        }
+        $dataArray = ['guides' => $formattedGuides, 'agencies' => $formattedAgencies];
         return response()->json($dataArray, 200);
     }
 
@@ -89,7 +146,19 @@ class UserController extends Controller
     {
         $user = User::find($userId);
         $userRequests=$user->userRequests;
-        return response()->json($userRequests, 200);
+        $formattedUserRequests = [];
+        foreach ($userRequests as $userRequest) {
+            $formattedUserRequests[] = [
+                'id'=> $userRequest->id,
+                'user_id' => User::find($userRequest->user_id) ? (new UserController())->getUser($userRequest->user_id)->original: null,
+                'status'=> $userRequest->status,
+                'guide_id'=> TourGuide::find($userRequest->guide_id) ? (new TourGuideController())->getGuide($userRequest->guide_id)->original: null,
+                'agency_id'=> TourismAgency::find($userRequest->agency_id) ? (new TourismAgencyController())->getAgency($userRequest->agency_id)->original: null,
+                'request_date'=>$userRequest->request_date,
+                'created_at'=>$userRequest->created_at,
+            ];
+        }
+        return response()->json($formattedUserRequests, 200);
     }
 
 

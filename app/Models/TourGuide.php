@@ -44,10 +44,20 @@ class TourGuide extends Model
     }
     public function guideRequests()
     {
-        return $this->hasMany(Requests::class, 'guide_id')->select('id', 'user_id', 'status', 'guide_id', 'agency_id', 'request_date');
+        return $this->hasMany(Requests::class, 'guide_id')->select('id', 'user_id', 'status', 'guide_id', 'agency_id', 'request_date','created_at');
     }
     public function guideReports()
     {
         return $this->hasMany(Reports::class, 'guide_id')->select('id', 'user_id', 'description', 'agency_id', 'guide_id');
+    }
+
+    //// format for created_at and updated_at
+    public function getCreatedAtFormattedAttribute()
+    {
+        return $this->created_at->format('Y-m-d');
+    }
+    public function getUpdatedAtFormattedAttribute()
+    {
+        return $this->updated_at->format('Y-m-d');
     }
 }

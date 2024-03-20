@@ -44,7 +44,7 @@ class TourismAgency extends Model
     }
     public function agencyRequests()
     {
-        return $this->hasMany(Requests::class, 'agency_id')->select('id', 'user_id', 'status', 'guide_id', 'agency_id', 'request_date');
+        return $this->hasMany(Requests::class, 'agency_id')->select('id', 'user_id', 'status', 'guide_id', 'agency_id', 'request_date','created_at');
     }
     public function agencyReports()
     {
