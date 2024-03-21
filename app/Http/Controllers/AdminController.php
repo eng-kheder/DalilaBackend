@@ -50,12 +50,22 @@ class AdminController extends Controller
     public function deleteGuide($id)
     {
         $tourGuide = TourGuide::find($id);
+        $tourGuide->guideRequests()->each(function ($request) {
+            $request->rate()->delete();
+            $request->delete();
+        });
+        $tourGuide->guideReports()->delete();
         $tourGuide->delete();
         return response()->json(['message' => "deleted successfully" ], 200);
     }
     public function deleteAgency($id)
     {
         $tourAgency = TourismAgency::find($id);
+        $tourAgency->agencyRequests()->each(function ($request) {
+            $request->rate()->delete();
+            $request->delete();
+        });
+        $tourAgency->agencyReports()->delete();
         $tourAgency->delete();
         return response()->json(['message' => "deleted successfully" ], 200);
     }
