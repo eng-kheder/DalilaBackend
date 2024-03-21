@@ -35,8 +35,8 @@ class TourismAgencyController extends Controller
 //                    ];
 //                }),
                 'tourism_agency_type' => $tourismAgency->tourismAgencyType,
-                'created_at'=> $tourismAgency->created_at ,
-                'updated_at'=> $tourismAgency->updated_at ,
+                'created_at'=> $tourismAgency->created_at_formatted ,
+                'updated_at'=> $tourismAgency->updated_at_formatted ,
                 'averageRate'=> $this->getAvgAgencyRates( $tourismAgency->id)->original,
 
             ];
@@ -87,8 +87,8 @@ class TourismAgencyController extends Controller
             'price_agency' => $tourismAgency->price_agency,
             'language_agency' => $tourismAgency->language_agency,
             'tourism_agency_type' => $tourismAgency->tourismAgencyType,
-            'created_at'=> $tourismAgency->created_at ,
-            'updated_at'=> $tourismAgency->updated_at ,
+            'created_at'=> $tourismAgency->created_at_formatted ,
+            'updated_at'=> $tourismAgency->updated_at_formatted ,
             'averageRate'=> $this->getAvgAgencyRates( $tourismAgency->id)->original,
 
         ];
@@ -119,8 +119,8 @@ class TourismAgencyController extends Controller
                 'price_agency' => $tourismAgency->price_agency,
                 'language_agency' => $tourismAgency->language_agency,
                 'tourism_agency_type' => $tourismAgency->tourismAgencyType,
-                'created_at'=> $tourismAgency->created_at ,
-                'updated_at'=> $tourismAgency->updated_at ,
+                'created_at'=> $tourismAgency->created_at_formatted ,
+                'updated_at'=> $tourismAgency->updated_at_formatted ,
                 'averageRate'=> $this->getAvgAgencyRates( $tourismAgency->id)->original,
 
             ];
@@ -142,8 +142,8 @@ class TourismAgencyController extends Controller
             'price_agency' => $tourismAgency->price_agency,
             'language_agency' => $tourismAgency->language_agency,
             'tourism_agency_type' => $tourismAgency->tourismAgencyType,
-            'created_at'=> $tourismAgency->created_at ,
-            'updated_at'=> $tourismAgency->updated_at ,
+            'created_at'=> $tourismAgency->created_at_formatted ,
+            'updated_at'=> $tourismAgency->updated_at_formatted ,
             'averageRate'=> $this->getAvgAgencyRates( $tourismAgency->id)->original,
 
         ];
@@ -167,7 +167,7 @@ class TourismAgencyController extends Controller
                     'guide_id' => TourGuide::find($agencyRequest->guide_id) ? (new TourGuideController())->getGuide($agencyRequest->guide_id)->original : null,
                     'agency_id' => TourismAgency::find($agencyRequest->agency_id) ? (new TourismAgencyController())->getAgency($agencyRequest->agency_id)->original : null,
                     'request_date' => $agencyRequest->request_date,
-                    'created_at' => $agencyRequest->created_at,
+                    'created_at' => $agencyRequest->created_at_formatted,
                 ];
             }
         }

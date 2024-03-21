@@ -28,8 +28,8 @@ class TourGuideController extends Controller
                 'price_guide' => $tourGuide->price_guide,
                 'language_guide' => $tourGuide->language_guide,
                 'tour_guide_type' => $tourGuide->tourGuideType,
-                'created_at'=> $tourGuide->created_at ,
-                'updated_at'=> $tourGuide->updated_at ,
+                'created_at'=> $tourGuide->created_at_formatted  ,
+                'updated_at'=> $tourGuide->updated_at_formatted ,
                 'averageRate'=> $this->getAvgGuideRates( $tourGuide->id)->original,
             ];
             return response()->json($responseData, 200);
@@ -73,8 +73,8 @@ class TourGuideController extends Controller
             'price_guide' => $tourGuide->price_guide,
             'language_guide' => $tourGuide->language_guide,
             'tour_guide_type' => $tourGuide->tourGuideType,
-            'created_at'=> $tourGuide->created_at ,
-            'updated_at'=> $tourGuide->updated_at ,
+            'created_at'=> $tourGuide->created_at_formatted ,
+            'updated_at'=> $tourGuide->updated_at_formatted ,
             'averageRate'=> $this->getAvgGuideRates( $tourGuide->id)->original,
 
         ];
@@ -104,8 +104,8 @@ class TourGuideController extends Controller
                 'price_guide' => $guide->price_guide,
                 'language_guide' => $guide->language_guide,
                 'tour_guide_type' => $guide->tourGuideType,
-                'created_at' => $guide->created_at,
-                'updated_at' => $guide->updated_at,
+                'created_at' => $guide->created_at_formatted,
+                'updated_at' => $guide->updated_at_formatted,
                 'averageRate'=> $this->getAvgGuideRates( $guide->id)->original,
             ];
         }
@@ -126,8 +126,8 @@ class TourGuideController extends Controller
             'price_guide' => $guide->price_guide,
             'language_guide' => $guide->language_guide,
             'tour_guide_type' => $guide->tourGuideType,
-            'created_at'=> $guide->created_at ,
-            'updated_at'=> $guide->updated_at ,
+            'created_at'=> $guide->created_at_formatted ,
+            'updated_at'=> $guide->updated_at_formatted ,
             'averageRate'=> $this->getAvgGuideRates( $guide->id)->original,
         ];
         return response()->json($guide, 200);
@@ -149,7 +149,7 @@ class TourGuideController extends Controller
                     'guide_id' => TourGuide::find($guideRequest->guide_id) ? (new TourGuideController())->getGuide($guideRequest->guide_id)->original : null,
                     'agency_id' => TourismAgency::find($guideRequest->agency_id) ? (new TourismAgencyController())->getAgency($guideRequest->agency_id)->original : null,
                     'request_date' => $guideRequest->request_date,
-                    'created_at' => $guideRequest->created_at,
+                    'created_at' => $guideRequest->created_at_formatted,
                 ];
             }
         }

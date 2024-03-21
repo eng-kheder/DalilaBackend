@@ -29,8 +29,8 @@ class UserController extends Controller
                 'gender_user' => $user->gender_user,
                 'age_user' => $user->age_user,
                 'user_type' => $user->userType,
-                'created_at'=> $user->created_at ,
-                'updated_at'=> $user->updated_at  ,
+                'created_at'=> $user->created_at_formatted ,
+                'updated_at'=> $user->updated_at_formatted  ,
             ];
             return response()->json($responseData, 200);
         }
@@ -71,8 +71,8 @@ class UserController extends Controller
             'gender_user' => $user->gender_user,
             'age_user' => $user->age_user,
             'user_type' => $user->userType,
-            'created_at'=> $user->created_at ,
-            'updated_at'=> $user->updated_at  ,
+            'created_at'=> $user->created_at_formatted ,
+            'updated_at'=> $user->updated_at_formatted  ,
         ];
         return response()->json($responseData, 200);
     }
@@ -89,8 +89,8 @@ class UserController extends Controller
             'gender_user' => $user->gender_user,
             'age_user' => $user->age_user,
             'user_type' => $user->userType,
-            'created_at'=> $user->created_at ,
-            'updated_at'=> $user->updated_at  ,
+            'created_at'=> $user->created_at_formatted ,
+            'updated_at'=> $user->updated_at_formatted  ,
             ];
         return response()->json($user, 200);
     }
@@ -112,8 +112,8 @@ class UserController extends Controller
                 'price_guide' => $guide->price_guide,
                 'language_guide' => $guide->language_guide,
                 'tour_guide_type' => $guide->tourGuideType,
-                'created_at' => $guide->created_at,
-                'updated_at' => $guide->updated_at,
+                'created_at' => $guide->created_at_formatted,
+                'updated_at' => $guide->updated_at_formatted,
                 'averageRate'=> (new TourGuideController)->getAvgGuideRates( $guide->id)->original,
 
             ];
@@ -132,8 +132,8 @@ class UserController extends Controller
                 'price_agency' => $tourismAgency->price_agency,
                 'language_agency' => $tourismAgency->language_agency,
                 'tourism_agency_type' => $tourismAgency->tourismAgencyType,
-                'created_at'=> $tourismAgency->created_at ,
-                'updated_at'=> $tourismAgency->updated_at ,
+                'created_at'=> $tourismAgency->created_at_formatted ,
+                'updated_at'=> $tourismAgency->updated_at_formatted ,
                 'averageRate'=> (new TourismAgencyController())->getAvgAgencyRates( $tourismAgency->id)->original,
 
             ];
@@ -155,7 +155,7 @@ class UserController extends Controller
                 'guide_id'=> TourGuide::find($userRequest->guide_id) ? (new TourGuideController())->getGuide($userRequest->guide_id)->original: null,
                 'agency_id'=> TourismAgency::find($userRequest->agency_id) ? (new TourismAgencyController())->getAgency($userRequest->agency_id)->original: null,
                 'request_date'=>$userRequest->request_date,
-                'created_at'=>$userRequest->created_at,
+                'created_at'=>$userRequest->created_at_formatted,
             ];
         }
         return response()->json($formattedUserRequests, 200);
