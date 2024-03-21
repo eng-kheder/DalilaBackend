@@ -160,6 +160,8 @@ class TourismAgencyController extends Controller
         } else {
             $formattedAgencyRequests = [];
             foreach ($agencyRequests as $agencyRequest) {
+                $rate = $agencyRequest->rate;
+
                 $formattedAgencyRequests[] = [
                     'id' => $agencyRequest->id,
                     'user_id' => User::find($agencyRequest->user_id) ? (new UserController())->getUser($agencyRequest->user_id)->original : null,
@@ -168,6 +170,13 @@ class TourismAgencyController extends Controller
                     'agency_id' => TourismAgency::find($agencyRequest->agency_id) ? (new TourismAgencyController())->getAgency($agencyRequest->agency_id)->original : null,
                     'request_date' => $agencyRequest->request_date,
                     'created_at' => $agencyRequest->created_at_formatted,
+                    'request_rate' => $rate ? [
+                        'id' => $rate->id,
+                        'user_id' => $rate->user_id,
+                        'request_id' => $rate->request_id,
+                        'description' => $rate->description,
+                        'value' => $rate->value,
+                    ] : null,
                 ];
             }
         }

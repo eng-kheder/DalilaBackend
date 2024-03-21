@@ -142,6 +142,8 @@ class TourGuideController extends Controller
         } else {
             $formattedGuideRequests = [];
             foreach ($guideRequests as $guideRequest) {
+                $rate = $guideRequest->rate;
+
                 $formattedGuideRequests[] = [
                     'id' => $guideRequest->id,
                     'user_id' => User::find($guideRequest->user_id) ? (new UserController())->getUser($guideRequest->user_id)->original : null,
@@ -150,7 +152,14 @@ class TourGuideController extends Controller
                     'agency_id' => TourismAgency::find($guideRequest->agency_id) ? (new TourismAgencyController())->getAgency($guideRequest->agency_id)->original : null,
                     'request_date' => $guideRequest->request_date,
                     'created_at' => $guideRequest->created_at_formatted,
-                ];
+                    'request_rate' => $rate ? [
+                        'id' => $rate->id,
+                        'user_id' => $rate->user_id,
+                        'request_id' => $rate->request_id,
+                        'description' => $rate->description,
+                        'value' => $rate->value,
+                    ] : null,
+                    ];
             }
         }
         return response()->json($formattedGuideRequests, 200);
