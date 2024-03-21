@@ -15,6 +15,7 @@ class RequestsController extends Controller
         $request = Requests::find($id);
         if ($request->status==1)
             return response()->json(['message' => "deleted fails"], 400);
+        $request->rate()->delete();
         $request->delete();
         return response()->json(['message' => "deleted successfully" ], 200);
     }
