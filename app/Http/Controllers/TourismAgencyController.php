@@ -8,6 +8,7 @@ use App\Models\TourismAgency;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use function Nette\Utils\isEmpty;
 
 class TourismAgencyController extends Controller
 {
@@ -85,13 +86,6 @@ class TourismAgencyController extends Controller
             'commercial_record_agency' => $tourismAgency->commercial_record_agency,
             'price_agency' => $tourismAgency->price_agency,
             'language_agency' => $tourismAgency->language_agency,
-
-//            'agencyLanguages' => $tourismAgency->agencyLanguages->map(function ($agencyLanguage) {
-//                return [
-//                    'language_id' => $agencyLanguage->language->id,
-//                    'language_name' => $agencyLanguage->language->language_name
-//                ];
-//            }),
             'tourism_agency_type' => $tourismAgency->tourismAgencyType,
             'created_at'=> $tourismAgency->created_at ,
             'updated_at'=> $tourismAgency->updated_at ,
@@ -159,47 +153,51 @@ class TourismAgencyController extends Controller
     public function getAgencyRequests($agencyId)
     {
         $agency = TourismAgency::find($agencyId);
-        $agencyRequests=$agency->agencyRequests;
-        $formattedAgencyRequests = [];
-        foreach ($agencyRequests as $agencyRequest) {
-            $formattedAgencyRequests[] = [
-                'id'=> $agencyRequest->id,
-                'user_id' => User::find($agencyRequest->user_id) ? (new UserController())->getUser($agencyRequest->user_id)->original: null,
-                'status'=> $agencyRequest->status,
-                'guide_id'=> TourGuide::find($agencyRequest->guide_id) ? (new TourGuideController())->getGuide($agencyRequest->guide_id)->original: null,
-                'agency_id'=> TourismAgency::find($agencyRequest->agency_id) ? (new TourismAgencyController())->getAgency($agencyRequest->agency_id)->original: null,
-                'request_date'=>$agencyRequest->request_date,
-                'created_at'=>$agencyRequest->created_at,
-            ];
+        $agencyRequests = $agency->agencyRequests;
+
+        if ($agencyRequests->isEmpty()) {
+            $formattedAgencyRequests = [];
+        } else {
+            $formattedAgencyRequests = [];
+            foreach ($agencyRequests as $agencyRequest) {
+                $formattedAgencyRequests[] = [
+                    'id' => $agencyRequest->id,
+                    'user_id' => User::find($agencyRequest->user_id) ? (new UserController())->getUser($agencyRequest->user_id)->original : null,
+                    'status' => $agencyRequest->status,
+                    'guide_id' => TourGuide::find($agencyRequest->guide_id) ? (new TourGuideController())->getGuide($agencyRequest->guide_id)->original : null,
+                    'agency_id' => TourismAgency::find($agencyRequest->agency_id) ? (new TourismAgencyController())->getAgency($agencyRequest->agency_id)->original : null,
+                    'request_date' => $agencyRequest->request_date,
+                    'created_at' => $agencyRequest->created_at,
+                ];
+            }
         }
         return response()->json($formattedAgencyRequests, 200);
-
     }
     public function getAgencyRates($agencyId)
     {
         $agency = TourismAgency::find($agencyId);
-        $agencyRates=$agency->agencyRequests->pluck('rate');
+        $agencyRequests=$agency->agencyRequests;
+            $agencyRates = $agency->agencyRequests->pluck('rate');
         return response()->json($agencyRates, 200);
     }
-
     public function getAvgAgencyRates($agencyId)
     {
-        $agency = TourismAgency::find($agencyId);
-        $avgAgencyRates = $this->getAgencyRates($agencyId)->original;
-        $totalValue = 0;
-        $numRates = count($avgAgencyRates);
-
-        foreach ($avgAgencyRates as $avgAgencyRate) {
-            $totalValue += $avgAgencyRate->value;
+        $agencyRatesResponse = $this->getAgencyRates($agencyId);
+        $agencyRates = $agencyRatesResponse->original;
+        $agencyRatesCount = count($agencyRates);
+        $agencyRatesValues = 0;
+        foreach ($agencyRates as $agencyRate) {
+            if (isset($agencyRate['value'])) {
+                $agencyRatesValues += $agencyRate['value'];
+            }
         }
-        if ($numRates > 0) {
-            $averageValue = $totalValue / $numRates;
+        if ($agencyRatesCount > 0) {
+            $averageValue = $agencyRatesValues / $agencyRatesCount;
         } else {
             $averageValue = 0;
         }
         return response()->json($averageValue, 200);
     }
-
 
 }
 

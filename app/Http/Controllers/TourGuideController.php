@@ -27,12 +27,6 @@ class TourGuideController extends Controller
                 'age_guide' => $tourGuide->age_guide,
                 'price_guide' => $tourGuide->price_guide,
                 'language_guide' => $tourGuide->language_guide,
-//                'guide_languages' => $tourGuide->guideLanguages->map(function ($guideLanguage) {
-//                    return [
-//                        'language_id' => $guideLanguage->language->id,
-//                        'language_name' => $guideLanguage->language->language_name
-//                    ];
-//                }),
                 'tour_guide_type' => $tourGuide->tourGuideType,
                 'created_at'=> $tourGuide->created_at ,
                 'updated_at'=> $tourGuide->updated_at ,
@@ -66,12 +60,6 @@ class TourGuideController extends Controller
             $tourGuide->tourGuideType()->associate($tourGuide->type_id);
         $tourGuide->save();
 
-        // Loop through the languages and associate them with the TourGuide
-//        foreach ($request->languages as $languageId) {
-//            $tourGuide->guideLanguages()->create([
-//                'language_id' => $languageId
-//            ]);
-//        }
 
         //output
         $responseData = [
@@ -84,12 +72,6 @@ class TourGuideController extends Controller
             'age_guide' => $tourGuide->age_guide,
             'price_guide' => $tourGuide->price_guide,
             'language_guide' => $tourGuide->language_guide,
-//            'guide_languages' => $tourGuide->guideLanguages->map(function ($guideLanguage) {
-//                return [
-//                    'language_id' => $guideLanguage->language->id,
-//                    'language_name' => $guideLanguage->language->language_name
-//                ];
-//            }),
             'tour_guide_type' => $tourGuide->tourGuideType,
             'created_at'=> $tourGuide->created_at ,
             'updated_at'=> $tourGuide->updated_at ,
@@ -143,12 +125,6 @@ class TourGuideController extends Controller
             'age_guide' => $guide->age_guide,
             'price_guide' => $guide->price_guide,
             'language_guide' => $guide->language_guide,
-//            'guide_languages' => $tourGuide->guideLanguages->map(function ($guideLanguage) {
-//                return [
-//                    'language_id' => $guideLanguage->language->id,
-//                    'language_name' => $guideLanguage->language->language_name
-//                ];
-//            }),
             'tour_guide_type' => $guide->tourGuideType,
             'created_at'=> $guide->created_at ,
             'updated_at'=> $guide->updated_at ,
@@ -161,46 +137,49 @@ class TourGuideController extends Controller
     {
         $guide = TourGuide::find($guideId);
         $guideRequests=$guide->guideRequests;
-        $formattedGuideRequests = [];
-        foreach ($guideRequests as $guideRequest) {
-            $formattedGuideRequests[] = [
-                'id'=> $guideRequest->id,
-                'user_id' => User::find($guideRequest->user_id) ? (new UserController())->getUser($guideRequest->user_id)->original: null,
-                'status'=> $guideRequest->status,
-                'guide_id'=> TourGuide::find($guideRequest->guide_id) ? (new TourGuideController())->getGuide($guideRequest->guide_id)->original: null,
-                'agency_id'=> TourismAgency::find($guideRequest->agency_id) ? (new TourismAgencyController())->getAgency($guideRequest->agency_id)->original: null,
-                'request_date'=>$guideRequest->request_date,
-                'created_at'=>$guideRequest->created_at,
-            ];
+        if ($guideRequests->isEmpty()) {
+            $formattedGuideRequests = [];
+        } else {
+            $formattedGuideRequests = [];
+            foreach ($guideRequests as $guideRequest) {
+                $formattedGuideRequests[] = [
+                    'id' => $guideRequest->id,
+                    'user_id' => User::find($guideRequest->user_id) ? (new UserController())->getUser($guideRequest->user_id)->original : null,
+                    'status' => $guideRequest->status,
+                    'guide_id' => TourGuide::find($guideRequest->guide_id) ? (new TourGuideController())->getGuide($guideRequest->guide_id)->original : null,
+                    'agency_id' => TourismAgency::find($guideRequest->agency_id) ? (new TourismAgencyController())->getAgency($guideRequest->agency_id)->original : null,
+                    'request_date' => $guideRequest->request_date,
+                    'created_at' => $guideRequest->created_at,
+                ];
+            }
         }
         return response()->json($formattedGuideRequests, 200);
     }
-
     public function getGuideRates($guideId)
     {
         $guide = TourGuide::find($guideId);
+        $guideRequests=$guide->guideRequests;
         $guideRates=$guide->guideRequests->pluck('rate');
         return response()->json($guideRates, 200);
     }
 
     public function getAvgGuideRates($guideId)
     {
-        $guide = TourGuide::find($guideId);
-        $avgGuideRates = $this->getGuideRates($guide->id)->original;
-        $totalValue = 0;
-        $numRates = count($avgGuideRates);
-
-        foreach ($avgGuideRates as $avgGuideRate) {
-            $totalValue += $avgGuideRate->value;
+        $guideRatesResponse = $this->getGuideRates($guideId);
+        $guideRates = $guideRatesResponse->original;
+        $guideRatesCount = count($guideRates);
+        $guideRatesValues = 0;
+        foreach ($guideRates as $guideRate) {
+            if (isset($guideRate['value'])) {
+                $guideRatesValues += $guideRate['value'];
+            }
         }
-        if ($numRates > 0) {
-            $averageValue = $totalValue / $numRates;
+        if ($guideRatesCount > 0) {
+            $averageValue = $guideRatesValues / $guideRatesCount;
         } else {
             $averageValue = 0;
         }
         return response()->json($averageValue, 200);
     }
-
-
 
 }
