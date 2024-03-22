@@ -51,4 +51,14 @@ class TourismAgency extends Model
         return $this->hasMany(Reports::class, 'agency_id')->select('id', 'user_id', 'description', 'agency_id', 'guide_id');
     }
 
+//// format for created_at and updated_at
+    public function getCreatedAtFormattedAttribute()
+    {
+        return $this->created_at->format('Y-m-d');
+    }
+    public function getUpdatedAtFormattedAttribute()
+    {
+        return $this->updated_at->format('Y-m-d');
+    }
+
 }
