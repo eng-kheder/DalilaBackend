@@ -164,7 +164,7 @@ class TourGuideController extends Controller
         }
         return response()->json($formattedGuideRequests, 200);
     }
-    public function getGuideRates1($guideId)
+    public function getGuideRates($guideId)
     {
         $guide = TourGuide::find($guideId);
         $guideRequests=$guide->guideRequests;
@@ -172,7 +172,7 @@ class TourGuideController extends Controller
         return response()->json($guideRates, 200);
     }
 
-    public function getGuideRates($guideId)//getAvgGuideRates
+    public function getAvgGuideRates($guideId)
     {
         $guide = TourGuide::find($guideId);
         $guideRequests=$guide->guideRequests->where('status',1);
@@ -180,7 +180,6 @@ class TourGuideController extends Controller
             return !is_null($rate) && !is_null($rate->value);
         });
         $guideRatesCount = count($guideRates);
-        return $guideRatesCount;
         $guideRatesValues = 0;
         foreach ($guideRates as $guideRate) {
             if (isset($guideRate['value'])) {
