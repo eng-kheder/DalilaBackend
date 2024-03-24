@@ -191,8 +191,11 @@ class TourismAgencyController extends Controller
     }
     public function getAvgAgencyRates($agencyId)
     {
-        $agencyRatesResponse = $this->getAgencyRates($agencyId);
-        $agencyRates = $agencyRatesResponse->original;
+        $agency = TourismAgency::find($agencyId);
+        $agencyRequests=$agency->agencyRequests->where('status',1);
+        $agencyRates =  $agency->agencyRequests->pluck('rate')->filter(function ($rate) {
+            return !is_null($rate) && !is_null($rate->value);
+        });
         $agencyRatesCount = count($agencyRates);
         $agencyRatesValues = 0;
         foreach ($agencyRates as $agencyRate) {
