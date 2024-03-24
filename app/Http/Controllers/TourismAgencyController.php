@@ -193,7 +193,7 @@ class TourismAgencyController extends Controller
     {
         $agency = TourismAgency::find($agencyId);
         $agencyRequests=$agency->agencyRequests->where('status',1);
-        $agencyRates =  $agency->agencyRequests->pluck('rate')->filter(function ($rate) {
+        $agencyRates =  $agencyRequests->pluck('rate')->filter(function ($rate) {
             return !is_null($rate) && !is_null($rate->value);
         });
         $agencyRatesCount = count($agencyRates);
