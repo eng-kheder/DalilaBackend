@@ -38,10 +38,6 @@ class TourGuide extends Model
     {
         return $this->belongsTo(UsersType::class, 'type_id')->select('id', 'type_title');
     }
-    public function guideLanguages()
-    {
-        return $this->hasMany(GuideLanguage::class, 'guide_id')->select( 'guide_id','language_id');
-    }
     public function guideRequests()
     {
         return $this->hasMany(Requests::class, 'guide_id')->select('id', 'user_id', 'status', 'guide_id', 'agency_id', 'request_date','created_at');

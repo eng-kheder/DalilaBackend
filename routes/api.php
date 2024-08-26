@@ -23,9 +23,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['namespace' => 'Language', 'prefix' => 'language'], function () {
-    Route::get('get-all-languages', [LanguageController::class, 'index'])->name('language.getAllLanguages');
-});
+
 
 Route::group(['namespace' => 'UserTypes', 'prefix' => 'userTypes'], function () {
     Route::get('get-all-UserTypes', [UsersTypeController::class, 'index'])->name('userTypes.getAllUserTypes');
