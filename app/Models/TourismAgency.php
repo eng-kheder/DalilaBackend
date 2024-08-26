@@ -36,11 +36,8 @@ class TourismAgency extends Model
 
     public function tourismAgencyType()
     {
+        //1 to m
         return $this->belongsTo(UsersType::class, 'type_id')->select('id', 'type_title');
-    }
-    public function agencyLanguages()
-    {
-        return $this->hasMany(AgencyLanguage::class, 'agency_id')->select( 'agency_id','language_id');
     }
     public function agencyRequests()
     {

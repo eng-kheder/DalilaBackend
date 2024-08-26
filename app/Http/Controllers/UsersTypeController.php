@@ -9,7 +9,7 @@ use App\Http\Requests\UpdateUsersTypeRequest;
 class UsersTypeController extends Controller
 {
 
-    public function index() // get all languages
+    public function index()
     {
         $allUserTypes = UsersType::all();
         return response()->json($allUserTypes, 200);
